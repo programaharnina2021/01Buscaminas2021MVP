@@ -10,6 +10,10 @@ public class Tablero {
 		this(lado, lado);
 	}
 
+	public Casilla getCasilla(Coordenada coord) {
+		return casillas[coord.getPosX()][coord.getPosY()];
+	}
+
 	public Tablero(int filas, int columnas) {
 		assert filas > 0;
 		assert columnas > 0;
