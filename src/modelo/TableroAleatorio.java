@@ -40,7 +40,7 @@ public class TableroAleatorio extends Tablero {
 	}
 
 	public void desvelarContiguas(Coordenada lugar) {
-		if (getCasilla(lugar).isVelada()) {
+		if (getCasilla(lugar).isVelada()&&!getCasilla(lugar).isMarcada()) {
 			getCasilla(lugar).setVelada(false);
 			if (getCasilla(lugar).isMina()) {
 				this.terminado = true;
@@ -58,6 +58,22 @@ public class TableroAleatorio extends Tablero {
 					}
 				}
 			}
+		}else {
+			//si alrededor tiene tantas casillas marcadas como minas alrededor
+			//tiene la propia casilla
+			//si el caso anterior es negativo NADA QUE HACER
+			//si es positivo
+			//repito el proceso de arriba
+			int alrededor = 8;
+			for (int i = 0; i < alrededor; i++) {
+				int[] coordenada = Utiles.damePosicionAlrededor(i);
+				Coordenada lugarRelativo = new Coordenada(lugar.getPosX() + coordenada[0],
+						lugar.getPosY() + coordenada[1]);
+				if (lugarRelativo.isInToLimits(getAncho(),getAlto())) {
+					desvelarContiguas(lugarRelativo);
+				}
+			}
+			
 		}
 	}
 
