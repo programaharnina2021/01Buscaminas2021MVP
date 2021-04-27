@@ -1,7 +1,7 @@
 package modelo;
 
 public class Coordenada {
-	private int posX,posY;
+	private int posX, posY;
 
 	public Coordenada(int posX, int posY) {
 		super();
@@ -49,6 +49,9 @@ public class Coordenada {
 			return false;
 		return true;
 	}
-	
+
+	public boolean isInToLimits(int ancho, int alto) {
+		return posX >= 0 && posY >= 0 && posX < alto && posY < ancho;
+	}
 
 }

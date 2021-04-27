@@ -5,27 +5,60 @@ import java.util.ArrayList;
 import utiles.Utiles;
 
 public class TableroAleatorio extends Tablero {
+	private boolean terminado = false;
 
-	//Constructor aleatorio
+	// Constructor aleatorio
 	public TableroAleatorio(int lado, int minas) {
 		super(lado);
 		ArrayList<Coordenada> posiciones = generaAleatorio(minas, lado);
 		disponerTablero(posiciones);
 	}
-	
-	//constructor no aleatorio
-	public TableroAleatorio(int lado,ArrayList<Coordenada> posiciones) {
+
+	// constructor no aleatorio
+	public TableroAleatorio(int lado, ArrayList<Coordenada> posiciones) {
 		super(lado);
 		disponerTablero(posiciones);
 	}
+
 	private void disponerTablero(ArrayList<Coordenada> posiciones) {
 		colocarMinas(posiciones);
 		contarMinasAlrededor(posiciones);
 	}
 
-
 	public void contarMinasAlrededor(ArrayList<Coordenada> posiciones) {
 		// TODO
+	}
+
+	public boolean[][] getCasillasDesveladas() {
+		boolean resultados[][] = new boolean[getAlto()][getAncho()];
+		for (int i = 0; i < resultados.length; i++) {
+			for (int j = 0; j < resultados[i].length; j++) {
+				resultados[i][j] = getCasilla(new Coordenada(i, j)).isVelada();
+			}
+		}
+		return resultados;
+	}
+
+	public void desvelarContiguas(Coordenada lugar) {
+		if (getCasilla(lugar).isVelada()) {
+			getCasilla(lugar).setVelada(false);
+			if (getCasilla(lugar).isMina()) {
+				this.terminado = true;
+			} else {
+				if (getCasilla(lugar).getMinasAlrededor() == 0) {
+					// proceso recursivo
+					int alrededor = 8;
+					for (int i = 0; i < alrededor; i++) {
+						int[] coordenada = Utiles.damePosicionAlrededor(i);
+						Coordenada lugarRelativo = new Coordenada(lugar.getPosX() + coordenada[0],
+								lugar.getPosY() + coordenada[1]);
+						if (lugarRelativo.isInToLimits(getAncho(),getAlto())) {
+							desvelarContiguas(lugarRelativo);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void colocarMinas(ArrayList<Coordenada> posiciones) {
